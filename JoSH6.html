@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JoSH AI - Your Academic Assistant</title>
+    <link rel="stylesheet" href="./style6.css">
+</head>
+<body class="dark-mode">
+    <!-- Animated Background -->
+    <div class="animated-bg" id="animatedBg"></div>
+
+    <!-- Header -->
+    <div class="header">
+        <div class="logo-section">
+            <div class="app-name">🎓 JoSH AI
+                <sub style="font-size: 0.5em; margin-left: 3px; color: #aaa;">
+                    by Cynaptics Club, IIT Indore
+                </sub>
+            </div>
+        </div>
+        <div class="header-controls">
+            <button class="theme-toggle" onclick="toggleTheme()">🌓</button>
+            <button class="new-chat-btn hidden" id="newChatBtn" onclick="startNewChat()">New Chat</button>
+        </div>
+    </div>
+
+    <!-- Login Page -->
+    <div class="login-container" id="loginContainer">
+        <div class="login-left">
+            <div class="welcome-content">
+                <h1 class="welcome-title">🎓 JoSH AI</h1>
+                <p class="welcome-subtitle">Your intelligent academic assistant for JoSSA Counselling. Get personalized guidance based on your rank and category to achieve your engineering dreams by choosing the right priority order.</p>
+            </div>
+        </div>
+        <div class="login-right">
+            <div class="login-form">
+                <h2 class="login-title">Welcome JEE Aspirant!</h2>
+                <div class="form-group">
+                    <input type="email" class="form-input" placeholder="Enter your email" id="emailInput">
+                    <span id="emailError" style="color: #e74c3c; font-size: 0.95em; display: none;">Please enter a valid email address.</span>
+                </div>
+                <div class="form-group">
+                    <input type="text" class="form-input name-input" placeholder="Enter your full name" id="nameInput">
+                </div>
+                <button class="login-btn" onclick="login()">Click Here</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chat Container -->
+    <div class="chat-container" id="chatContainer">
+        <!-- User Details Section -->
+        <div class="user-details-section" id="userDetailsSection">
+            <div class="details-form">
+                <h1 class="details-title">Welcome to 🎓JoSH AI!</h1>
+                <h3 class="details-subtitle">Please fill in your details and ask me anything about JEE counselling, college predictions, and career guidance.</h3>
+                <div class="form-row">
+                    <label class="form-label">Category:</label>
+                    <select id="categorySelect">
+                        <option value="">Select Category</option>
+                        <option value="OPEN">OPEN</option>
+                        <option value="OBC-NCL">OBC-NCL</option>
+                        <option value="SC">SC</option>
+                        <option value="ST">ST</option>
+                        <option value="EWS">EWS</option>
+                    </select>
+                  
+                </div>
+                <div class="form-row">
+                    <label class="form-label">Gender:</label>
+                    <select id="genderSelect">
+                        <option value="">Select Gender</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <!-- <option value="Other">Other</option> -->
+                    </select>
+                </div>
+                <div class="input-helper">
+                    (Enter your Category Rank if you belong to a reserved category)
+                </div>
+                <div class="form-row">
+                    <label class="form-label" for="mainsRank">JEE MAINS Rank:</label>
+                    <textarea class="form-input rank-input" placeholder="Enter MAINS rank" id="mainsRank" inputmode="numeric" pattern="\d*" min="1" autocomplete="off" rows="1"></textarea>
+                </div>
+                <div class="form-row">
+                    <label class="form-label" for="advancedRank">JEE ADVANCED Rank:</label>
+                    <textarea class="form-input rank-input" placeholder="Enter ADV rank" id="advancedRank" inputmode="numeric" pattern="\d*" min="1" autocomplete="off" rows="1"></textarea>
+                </div>
+                <button class="start-chat-btn" id="startChatBtn" onclick="startChatting()">Start Chatting</button>
+            </div>
+        </div>
+
+        <!-- NEW: Main Chat Area -->
+        <div class="main-chat-area hidden" id="mainChatArea">
+            <div class="scrollable-content" id="scrollableContent">
+                <!-- Congratulations Section -->
+                <div class="congratulations-section" id="congratulationsSection">
+                    <div class="congrats-text" id="congratsText"></div>
+                </div>
+
+                <!-- Chat Messages -->
+                <div class="chat-messages" id="chatMessages">
+                    <!-- Messages will be added here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Chat Input -->
+        <div class="chat-input-section hidden" id="chatInputSection">
+            <div class="input-container">
+                <div class="input-warning">
+                    JoSH AI answers are AI generated. Please verify important information independently.
+                </div>
+                <div class="input-wrapper">
+                    <textarea id="messageInput" placeholder="Type your message..." rows="1"></textarea>
+                    <button class="send-btn" onclick="sendMessage()">
+                        <span>→</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="./script6.js"></script>
+</body>
+</html>
