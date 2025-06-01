@@ -516,14 +516,73 @@ body {
 .hidden {
     display: none !important;
 }
+/* Scrollbar Styling */
+.scrollable-content::-webkit-scrollbar {
+    width: 6px;
+}
+.scrollable-content::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+}
+.scrollable-content::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 3px;
+}
+.scrollable-content::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.5);
+}
 /* Responsive Design */
 @media (max-width: 600px) {
     .login-container {
         flex-direction: column;
+        margin-top: 60px;
+        height: calc(100vh - 60px);
+        overflow-y: hidden; /* Prevent scrolling */
+        position: relative;
+    }
+
+    .login-left {
+        flex: none;
+        position: fixed;
+        top: 60px; /* Below header */
+        left: 0;
+        width: 100%;
+        min-height: 200px;
+        padding: 1rem;
+        z-index: 1;
+        background-color: rgba(108, 102, 102, 0.1);
+    }
+
+    .login-right {
+        flex: none;
+        position: fixed;
+        top: 260px; /* Below login-left (60px header + 200px login-left) */
+        left: 0;
+        width: 100%;
+        padding: 1rem;
+        z-index: 2;
+        height: calc(100vh - 260px);
+        overflow-y: auto;
+    }
+
+    .welcome-content {
+        padding: 1rem;
+        max-width: 100%;
+    }
+
+    .login-form {
+        margin: 0 auto;
+        margin-top: 1rem;
+        max-width: 90%;
     }
 
     .header {
-        padding: 1rem;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        padding: 0.5rem;
+        z-index: 1000;
     }
     .header-controls {
         margin-top: 4px;
@@ -547,28 +606,86 @@ body {
         min-width: 0;
         margin-bottom: 2px;
     }
-    .message {
-        max-width: 95%;
+    .scrollable-content {
+        padding: 0.5rem;
     }
-    .main-chat-area {
-        margin: 0 0.5rem;
+
+    .input-container {
+        padding: 0.5rem;
+    }
+
+    .message {
+        max-width: 85%; /* Reduce max width */
+        gap: 0.5rem; /* Reduce gap between logo and message */
+        margin-bottom: 10px; /* Reduce spacing between messages */
+    }
+
+    .message-content {
+        padding: 0.8rem 1rem; /* Reduce padding */
+        font-size: 0.9rem; /* Smaller font size */
+        line-height: 1.4; /* Adjust line height */
+        border-radius: 12px; /* Slightly smaller border radius */
+    }
+
+    .message.user .message-content {
+        border-bottom-right-radius: 4px; /* Adjust corner radius */
+    }
+
+    .message.assistant .message-content {
+        border-bottom-left-radius: 4px; /* Adjust corner radius */
+    }
+
+    .message-logo {
+        width: 24px; /* Smaller logo size */
+        height: 24px; /* Smaller logo size */
+        font-size: 12px; /* Smaller font size for logo */
+    }
+        .chat-container {
+        padding-top: 60px; /* Height of header */
     }
     .chat-input-section {
-        margin: 0 0.5rem 0.5rem 0.5rem;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        margin: 0;
+        border-radius: 0;
+        background: rgba(118, 112, 112, 0.45);
+        /* backdrop-filter: blur(10px); */
+        z-index: 1000;
     }
-}
-/* Scrollbar Styling */
-.scrollable-content::-webkit-scrollbar {
-    width: 6px;
-}
-.scrollable-content::-webkit-scrollbar-track {
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 3px;
-}
-.scrollable-content::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.3);
-    border-radius: 3px;
-}
-.scrollable-content::-webkit-scrollbar-thumb:hover {
-    background: rgba(255, 255, 255, 0.5);
+    .congratulations-section {
+        padding: 1rem; /* Reduce padding */
+        font-size: 0.9rem; /* Reduce font size */
+        line-height: 1.4; /* Adjust line height */
+        margin-bottom: 0.5rem; /* Reduce margin */
+    }
+    
+    .congrats-text {
+        font-size: 1rem; /* Smaller font size */
+        line-height: 1.5; /* Adjust line height */
+        text-align: center;
+    }    
+    .main-chat-area {
+        margin: 0;
+        padding-bottom: 120px; /* Height of input section */
+        border-radius: 0;
+    }
+    .user-details-section {
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 90%;
+        min-width: unset;
+        margin: 1rem auto;
+        padding: 20px;
+    }
+
+    .details-title {
+        font-size: 1.5rem;
+    }
+
+    .details-subtitle {
+        font-size: 0.9rem;
+        margin-bottom: 1.5rem;
+    }
 }
