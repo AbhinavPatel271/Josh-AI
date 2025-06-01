@@ -6,6 +6,8 @@ let userDetails = {
 };
 let mathInterval, physicsInterval, chemInterval;
 let chatHistory = [];
+let apiResponseReceived = false;
+let collegesData = null;
 // Initialize animated background
 function initAnimatedBackground() {
     const bg = document.getElementById('animatedBg');
@@ -130,11 +132,15 @@ function showThinking() {
     thinkingDiv.className = 'message assistant';
     thinkingDiv.id = 'thinkingIndicator';
     
+    // Add logo first
+    const logoDiv = document.createElement('div');
+    logoDiv.className = 'message-logo';
+    logoDiv.innerHTML = '🎓';
+    
     const contentDiv = document.createElement('div');
     contentDiv.className = 'message-content thinking';
     contentDiv.innerHTML = `
         <div class="thinking-indicator">
-            <div class="thinking-text"><b>Thinking</b></div>
             <div class="thinking-dots">
                 <div class="thinking-dot"></div>
                 <div class="thinking-dot"></div>
@@ -143,6 +149,8 @@ function showThinking() {
         </div>
     `;
     
+    // Append logo then content
+    thinkingDiv.appendChild(logoDiv);
     thinkingDiv.appendChild(contentDiv);
     messagesContainer.appendChild(thinkingDiv);
 
@@ -163,6 +171,9 @@ function hideThinking() {
 }
 
 function startChatting() {
+    // Reset flags
+    apiResponseReceived = false;
+    collegesData = null;
     const category = document.getElementById('categorySelect').value;
     const gender = document.getElementById('genderSelect').value;
     const mains = document.getElementById('mainsRank').value;
@@ -201,10 +212,7 @@ function startChatting() {
     };
 
     // Make API call in parallel
-    fetch(
-        'https://jossa-bot-backend.onrender.com/first_response',
-        // 'http://127.0.0.1:5050/first_response'
-        {
+    fetch('https://jossa-bot-backend.onrender.com/first_response', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(requestBody)
@@ -214,27 +222,28 @@ function startChatting() {
         return response.json();
     })
     .then(data => {
+        apiResponseReceived = true;
+        collegesData = data;
         // Hide thinking indicator
         hideThinking();
-
+        const typewriterSpan = document.querySelector('.typewriter');
+        if (!typewriterSpan) {
+            hideThinking();
         // Add colleges message to chat
-        let collegesMsg = (data.answer.response_advance + "\n\n\n"+ data.answer.response_mains) || 
+        let collegesMsg = (data.answer.response_advance + "\n\n\n" + data.answer.response_mains) || 
             "These are the top colleges based on your details.";
         chatHistory = [
             { role: "assistant", content: collegesMsg }
         ];
         addMessage(collegesMsg, 'assistant');
-        
+    
         console.log("Chat History JSON:", JSON.stringify(data, null, 2));
+    }
     })
     .catch(error => {
+        apiResponseReceived = true;
         hideThinking();
-        let err = document.createElement('div');
-        err.id = 'userDetailsError';
-        err.style.color = '#e74c3c';
-        err.style.marginTop = '10px';
-        err.textContent = 'There was an error getting college recommendations. Please try again.';
-        document.getElementById('chatMessages').appendChild(err);
+        addMessage("Sorry, there was an error getting college recommendations. Please try again or check your connection.", 'assistant');
     });
 }
 function showCongratulations(afterTypewriterCallback) {
@@ -259,7 +268,17 @@ function showCongratulations(afterTypewriterCallback) {
             typewriterSpan.classList.remove('typewriter');
             setTimeout(() => {
                 document.getElementById('messageInput').focus();
-                if (typeof afterTypewriterCallback === 'function') {
+                // Check if API response was received during typing
+                if (apiResponseReceived && collegesData) {
+                    // Display colleges directly without thinking animation
+                    let collegesMsg = (collegesData.answer.response_advance + collegesData.answer.response_mains) || 
+                        "These are the top colleges based on your details.";
+                    chatHistory = [
+                        { role: "assistant", content: collegesMsg }
+                    ];
+                    addMessage(collegesMsg, 'assistant');
+                } else if (typeof afterTypewriterCallback === 'function') {
+                    // Show thinking animation only if we're still waiting for API
                     afterTypewriterCallback();
                 }
             }, 400);
@@ -338,23 +357,20 @@ function renderMarkdown(text) {
 // Send message
 function sendMessage() {
     const input = document.getElementById('messageInput');
-    const prompt = `My JEE advance rank is ${userDetails.advancedRank}. My JEE mains rank ${userDetails.mainsRank}. My category is ${userDetails.category}. My gender is ${userDetails.gender}.`
     const message = input.value.trim();
     if (!message) return;
 
     addMessage(message, 'user');
     chatHistory.push({ role: "user", content: message });
+    const prompt = `My JEE advance rank is ${userDetails.advancedRank}. My JEE mains rank ${userDetails.mainsRank}. My category is ${userDetails.category}. My gender is ${userDetails.gender}.`
     input.value = '';
     // Show thinking indicator before API call
     showThinking();
     // API call to backend LLM for further chat
-    fetch(
-        'https://jossa-bot-backend.onrender.com/further_chat',
-        // 'http://127.0.0.1:5050/further_chat',
-         {
+    fetch('https://jossa-bot-backend.onrender.com/further_chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ chat_history: chatHistory , prompt : prompt })
+        body: JSON.stringify({ chat_history: chatHistory , prompt : prompt})
     })
     .then(response => {
         if (!response.ok) throw new Error('Chatbot API request failed');
@@ -384,16 +400,27 @@ function addMessage(content, sender) {
     
     const contentDiv = document.createElement('div');
     contentDiv.className = 'message-content';
-    // contentDiv.textContent = content;
     if (sender === 'assistant') {
         contentDiv.innerHTML = renderMarkdown(content);
+        // Assistant: Logo then Content
+        const logoDiv = document.createElement('div');
+        logoDiv.className = 'message-logo';
+        logoDiv.innerHTML = '🎓';
+        messageDiv.appendChild(logoDiv);
+        messageDiv.appendChild(contentDiv);
     } else {
+        // User: Content then Logo
         contentDiv.textContent = content;
-    }            
-    messageDiv.appendChild(contentDiv);
+        const logoDiv = document.createElement('div');
+        logoDiv.className = 'message-logo';
+        logoDiv.innerHTML = '👤';
+        messageDiv.appendChild(contentDiv);
+        messageDiv.appendChild(logoDiv);
+    }
+    
     messagesContainer.appendChild(messageDiv);
     
-    // Scroll to bottom of the scrollable content
+    // Scroll to bottom
     const scrollableContent = document.getElementById('scrollableContent');
     scrollableContent.scrollTop = scrollableContent.scrollHeight;
 }
