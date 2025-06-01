@@ -54,10 +54,10 @@ body {
         opacity: 0;
     }
     10% {
-        opacity: 0.1;
+        opacity: 0.5;
     }
     90% {
-        opacity: 0.1;
+        opacity: 0.5;
     }
     to {
         transform: translateY(-100px) rotate(360deg);
@@ -119,7 +119,8 @@ body {
     align-items: center;
     justify-content: center;
     align-items: center;
-    background-color: rgba(108, 102, 102, 0.1);
+    background-color: rgba(108, 102, 102, 0.2);
+
     padding: 20px;
 }
 .welcome-content {
@@ -161,6 +162,11 @@ body {
     text-align: center;
     margin-bottom: 2rem;
     font-size: 1.5rem;
+    font-weight: bold;
+    background: linear-gradient(45deg, #4a90e2, #7b68ee, #32cd32);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
 }
 .form-group {
     margin-bottom: 1rem;
@@ -196,6 +202,13 @@ body {
     transform: translateY(-2px);
     box-shadow: 0 5px 15px rgba(74, 144, 226, 0.4);
 }
+.login-description {
+    font-size: 1.4rem;
+    margin-bottom: 2.5rem;
+    text-align: center;
+    line-height: 1.5;
+}
+
 /* Chat Container */
 .chat-container {
     display: none;
@@ -253,6 +266,11 @@ body {
     color: inherit;
     font-size: 1rem;
     resize: none;
+}
+/* Dropdown menu options for category and gender */
+.form-row select option {
+    /* font-weight: bold;  */
+    color: #333; /* Optional: Adjust text color for better visibility */
 }
 .form-row select:focus, .form-row textarea:focus {
     outline: none;
@@ -451,6 +469,11 @@ body {
     border: 2px solid transparent;
     border-image: linear-gradient(45deg, #4a90e2, #7b68ee, #32cd32);
     border-image-slice: 1;
+}
+#messageInput:disabled {
+    background-color: #f0f0f0;
+    color: #a0a0a0;
+    cursor: not-allowed;
 }
 /* Chat Input Section */
 .chat-input-section {
@@ -660,7 +683,7 @@ body {
         line-height: 1.4; /* Adjust line height */
         margin-bottom: 0.5rem; /* Reduce margin */
     }
-    
+
     .congrats-text {
         font-size: 1rem; /* Smaller font size */
         line-height: 1.5; /* Adjust line height */

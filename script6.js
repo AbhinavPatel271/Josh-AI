@@ -55,30 +55,36 @@ function toggleTheme() {
 }
 // Login functions
 function login() {
-    const email = document.getElementById('emailInput').value.trim();
-    const name = document.getElementById('nameInput').value.trim();
-    const emailError = document.getElementById('emailError');
-    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailPattern.test(email)) {
-        emailError.style.display = 'block';
-        return;
-    } else {
-        emailError.style.display = 'none';
-    }
-    const namePattern = /^[A-Za-z\s]{2,}$/;
-    if (!namePattern.test(name)) {
-        alert("Please enter a valid name (letters and spaces only).");
-        return;
-    }
+    // const email = document.getElementById('emailInput').value.trim();
+    // const name = document.getElementById('nameInput').value.trim();
+    // const emailError = document.getElementById('emailError');
+    // const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    // if (!emailPattern.test(email)) {
+    //     emailError.style.display = 'block';
+    //     return;
+    // } else {
+    //     emailError.style.display = 'none';
+    // }
+    // const namePattern = /^[A-Za-z\s]{2,}$/;
+    // if (!namePattern.test(name)) {
+    //     alert("Please enter a valid name (letters and spaces only).");
+    //     return;
+    // }
     showChatInterface();
 }
 function loginTypewriter() {
     const welcomeTitle = document.querySelector('.welcome-title');
     const welcomeSubtitle = document.querySelector('.welcome-subtitle');
+    const welcomeTitle2 = document.querySelector('.login-title');
+    const welcomeSubtitle2= document.querySelector('.login-description');
     const titleText = "🎓 JoSH AI";
-    const subtitleText = "Your intelligent academic assistant for JoSSA Counselling. Get personalized guidance based on your rank and category to achieve your engineering dreams by choosing the right priority order.";
+    const subtitleText = "Your intelligent academic assistant for JOSAA Counselling. Get personalized guidance based on your rank and category to achieve your engineering dreams by choosing the right priority order.";
+    const titleText2 = "Welcome JEE Aspirant!";
+    const subtitleText2 = "Start your personalized JOSAA counselling journey with JoSH AI. Click below to explore college predictions and career guidance tailored just for you!";
     welcomeTitle.textContent = "";
     welcomeSubtitle.textContent = "";
+    welcomeTitle2.textContent = "";
+    welcomeSubtitle2.textContent = "";
     function typeText(element, text, speed, callback) {
         let i = 0;
         function type() {
@@ -94,6 +100,9 @@ function loginTypewriter() {
     }
     typeText(welcomeTitle, titleText, 60, function() {
         typeText(welcomeSubtitle, subtitleText, 18);
+    });
+        typeText(welcomeTitle2, titleText2, 60, function() {
+        typeText(welcomeSubtitle2, subtitleText2, 18);
     });
 }
 // Show chat interface
@@ -127,16 +136,20 @@ function validateForm() {
 function showThinking() {
     const messagesContainer = document.getElementById('chatMessages');
     const scrollableContent = document.getElementById('scrollableContent');
-    
+    const messageInput = document.getElementById('messageInput');
+
+    // Disable input box
+    messageInput.disabled = true;
+
     const thinkingDiv = document.createElement('div');
     thinkingDiv.className = 'message assistant';
     thinkingDiv.id = 'thinkingIndicator';
-    
+
     // Add logo first
     const logoDiv = document.createElement('div');
     logoDiv.className = 'message-logo';
     logoDiv.innerHTML = '🎓';
-    
+
     const contentDiv = document.createElement('div');
     contentDiv.className = 'message-content thinking';
     contentDiv.innerHTML = `
@@ -148,7 +161,7 @@ function showThinking() {
             </div>
         </div>
     `;
-    
+
     // Append logo then content
     thinkingDiv.appendChild(logoDiv);
     thinkingDiv.appendChild(contentDiv);
@@ -167,6 +180,11 @@ function showThinking() {
 
 function hideThinking() {
     const thinkingDiv = document.getElementById('thinkingIndicator');
+    const messageInput = document.getElementById('messageInput');
+
+    // Enable input box
+    messageInput.disabled = false;
+
     if (thinkingDiv) thinkingDiv.remove();
 }
 
@@ -199,8 +217,11 @@ function startChatting() {
 
     // Start congratulations animation
     showCongratulations(() => {
-        // Show thinking indicator after congratulations
+    // Check if an error message was displayed
+    if (!apiResponseReceived) {
+        // Show thinking indicator only if no error occurred
         showThinking();
+    }
     });
 
     // Prepare request body as per API format
@@ -230,7 +251,7 @@ function startChatting() {
         if (!typewriterSpan) {
             hideThinking();
         // Add colleges message to chat
-        let collegesMsg = (data.answer.response_advance + "\n\n\n" + data.answer.response_mains) || 
+        let collegesMsg = (data.answer.response_advance + "\n\n\n" +data.answer.response_mains) || 
             "These are the top colleges based on your details.";
         chatHistory = [
             { role: "assistant", content: collegesMsg }
@@ -243,7 +264,8 @@ function startChatting() {
     .catch(error => {
         apiResponseReceived = true;
         hideThinking();
-        addMessage("Sorry, there was an error getting college recommendations. Please try again or check your connection.", 'assistant');
+        addMessage("Sorry, there was an error getting college recommendations. Please try again or check your internet connection.", 'assistant');
+        hideThinking();
     });
 }
 function showCongratulations(afterTypewriterCallback) {
@@ -259,6 +281,7 @@ function showCongratulations(afterTypewriterCallback) {
     const typewriterSpan = congratsText.querySelector('.typewriter');
     let i = 0;
     const typeSpeed = 10;
+
     function typeWriter() {
         if (i < message.length) {
             typewriterSpan.textContent = message.slice(0, i + 1);
@@ -266,6 +289,21 @@ function showCongratulations(afterTypewriterCallback) {
             setTimeout(typeWriter, typeSpeed);
         } else {
             typewriterSpan.classList.remove('typewriter');
+
+            // Add disclaimer text after typing is complete
+            const disclaimerDiv = document.createElement('div');
+            disclaimerDiv.className = 'disclaimer-text';
+            disclaimerDiv.innerHTML = `
+                <strong>Disclaimer:</strong>
+                <ul>
+                    <li>The college list provided by JoSH AI are just suggestions and if you have any specific preferrence do mention that.</li>
+                    <li>Search about one college at a time for better results.</li>
+                    <li>If you want guidance for other ranks, please use the 'New Chat' button.</li>
+                    <li>Keep your questions detailed for accurate results.</li>
+                </ul>
+            `;
+            congratsSection.appendChild(disclaimerDiv);
+
             setTimeout(() => {
                 document.getElementById('messageInput').focus();
                 // Check if API response was received during typing
@@ -276,6 +314,7 @@ function showCongratulations(afterTypewriterCallback) {
                     chatHistory = [
                         { role: "assistant", content: collegesMsg }
                     ];
+                    hideThinking();
                     addMessage(collegesMsg, 'assistant');
                 } else if (typeof afterTypewriterCallback === 'function') {
                     // Show thinking animation only if we're still waiting for API
@@ -359,7 +398,7 @@ function sendMessage() {
     const input = document.getElementById('messageInput');
     const message = input.value.trim();
     if (!message) return;
-
+    hideThinking();
     addMessage(message, 'user');
     chatHistory.push({ role: "user", content: message });
     const prompt = `My JEE advance rank is ${userDetails.advancedRank}. My JEE mains rank ${userDetails.mainsRank}. My category is ${userDetails.category}. My gender is ${userDetails.gender}.`
@@ -465,6 +504,11 @@ function startNewChat() {
     
     userDetails = { category: '', gender: '', mainsRank: '', advancedRank: '' };
     chatHistory = [];
+    // Remove disclaimer text
+    const disclaimerDiv = document.querySelector('.disclaimer-text');
+    if (disclaimerDiv) {
+        disclaimerDiv.remove();
+    }
 }
 // Initialize everything
 document.addEventListener('DOMContentLoaded', function() {
