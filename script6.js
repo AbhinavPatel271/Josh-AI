@@ -212,7 +212,7 @@ function startChatting() {
     };
 
     // Make API call in parallel
-    fetch('https://jossa-bot-backend.onrender.com/first_response', {
+    fetch('https://josh-ai-backend.onrender.com/first_response', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(requestBody)
@@ -367,7 +367,7 @@ function sendMessage() {
     // Show thinking indicator before API call
     showThinking();
     // API call to backend LLM for further chat
-    fetch('https://jossa-bot-backend.onrender.com/further_chat', {
+    fetch('https://josh-ai-backend.onrender.com/further_chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ chat_history: chatHistory , prompt : prompt})
