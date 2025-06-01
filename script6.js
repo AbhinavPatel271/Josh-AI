@@ -264,7 +264,7 @@ function startChatting() {
     .catch(error => {
         apiResponseReceived = true;
         hideThinking();
-        addMessage("Sorry, there was an error getting college recommendations. Please try again or check your internet connection.", 'assistant');
+        addMessage("Sorry, there was an error getting college recommendations. Please try again or check your internet connection. You can try asking futher questions regarding colleges or JOSAA specific details.", 'assistant');
         hideThinking();
     });
 }
@@ -296,10 +296,11 @@ function showCongratulations(afterTypewriterCallback) {
             disclaimerDiv.innerHTML = `
                 <strong>Disclaimer:</strong>
                 <ul>
-                    <li>The college list provided by JoSH AI are just suggestions and if you have any specific preferrence do mention that.</li>
+                    <li>The college list provided by JoSH AI are just suggestions and if you have any specific preferrence, do mention that.</li>
                     <li>Search about one college at a time for better results.</li>
                     <li>If you want guidance for other ranks, please use the 'New Chat' button.</li>
                     <li>Keep your questions detailed for accurate results.</li>
+                    <li>While JoSH AI is thinking, you won't be able to send additional messages. Please wait for a response to continue.</li>
                 </ul>
             `;
             congratsSection.appendChild(disclaimerDiv);
@@ -419,7 +420,7 @@ function sendMessage() {
         // Hide thinking indicator before showing response
         hideThinking();
         // Expecting data.response as assistant's reply
-        let assistantMsg = data.answer || "Sorry, I couldn't process your request.";
+        let assistantMsg = data.answer || "Sorry, I couldn't process your request. You can try asking further questions.";
         chatHistory.push({ role: "assistant", content: assistantMsg });
         console.log("Chat History JSON:", JSON.stringify(chatHistory, null, 2))
         addMessage(assistantMsg, 'assistant');
@@ -427,7 +428,7 @@ function sendMessage() {
     })
     .catch(error => {
         hideThinking();
-        addMessage("There was an error getting a response from the assistant. Please try again.", 'assistant');
+        addMessage("There was an error getting a response from the assistant.  You can try asking further questions.", 'assistant');
     });
     
 }
