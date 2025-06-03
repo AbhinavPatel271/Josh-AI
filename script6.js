@@ -298,10 +298,16 @@ function showCongratulations(afterTypewriterCallback) {
                 <ul>
                     <li>The college list provided by JoSH AI are just suggestions and if you have any specific preferrence, do mention that.</li>
                     <li>Search about one college at a time for better results.</li>
-                    <li>If you want guidance for other ranks, please use the 'New Chat' button.</li>
                     <li>Keep your questions detailed for accurate results.</li>
-                    <li>While JoSH AI is thinking, you won't be able to send additional messages. Please wait for a response to continue.</li>
+                    <li>If you face some issues with the responses, start a new chat.</li>
                 </ul>
+                <strong>Example prompts:</strong>
+                <ul>
+                    <li>What are the documents required for JOSAA counselling process?</li>
+                    <li>What are the placement stats of IIT Indore CSE and IIT Gandhinagar CSE?</li>
+                    <li>Give me some information about coding culture of IIT Indore.</li>
+                </ul>
+                
             `;
             congratsSection.appendChild(disclaimerDiv);
 
