@@ -334,10 +334,13 @@ function showCongratulations(afterTypewriterCallback) {
 }
 function renderMarkdown(text) {
     // Escape HTML first
-    let html = text
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;');
+    let html = text.replace(/<(\/?a\s*[^>]*)>/g, (match) => `[[[HTML_TAG:${btoa(match)}]]]`);
+    html = html
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+// Restore <a> tags
+    html = html.replace(/\[\[\[HTML_TAG:([A-Za-z0-9+/=]+)\]\]\]/g, (_, encoded) => atob(encoded));
     // Headers (must be at start of line)
     html = html.replace(/^### (.*$)/gm, '<h3>$1</h3>');
     html = html.replace(/^## (.*$)/gm, '<h2>$1</h2>');
