@@ -712,3 +712,15 @@ body {
         margin-bottom: 1.5rem;
     }
 }
+
+a {
+    color: #4a90e2; 
+    text-decoration: none; 
+    font-weight: bold; 
+}
+
+a:hover {
+    color: #7b68ee; 
+    text-decoration: underline; 
+}
+
